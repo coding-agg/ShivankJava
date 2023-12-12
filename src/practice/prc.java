@@ -4,42 +4,10 @@ import java.util.*;
 
 public class prc {
 
+
     public static void main(String[] args) {
-        Scanner scn = new Scanner(System.in);
-        int test = scn.nextInt();
-        while(test-->0) {
-            int mod = 1000000007;
-            int num;
-            int N = scn.nextInt();
-            String S = scn.next();
-            long ans = 0;
-            for (int i = 2; i <N ; i=i+2) {
-                num = 0;
-                int x = S.charAt(i-2)-'0',y = S.charAt(i-1)-'0',z = S.charAt(i)-'0';
-                if((x|y) == z){
-                    num++;
-                }
-                if((x&y) == z){
-                    num++;
-                }
-                if((x^y) == z){
-                    num++;
-                }
-                if(ans == 0 && i == 2){
-                    ans = num;
-                }
-                else{
-                    ans = (ans*num)%mod;
-                }
-                if(num == 0){
-                    break;
-                }
-            }
-            System.out.println(ans);
-        }
+
     }
-
-
 
     public static int minimumRightShifts(List<Integer> nums) {
         int num = nums.size();
@@ -152,42 +120,6 @@ public class prc {
         return ans;
     }
 
-
-    public static String convert(String s, int numRows) {
-        if(numRows == 1){
-            return s;
-        }
-        String array[] = new String[numRows];
-        int length = s.length();
-        int len = 0;
-        int i = 0;
-        for (int j = 0; j < array.length; j++) {
-            array[j] = "";
-        }
-        while(length!=len){
-            if(i == 0){
-                while(i!=numRows && len!=length){
-                    array[i] += s.charAt(len);
-                    len++;
-                    i++;
-                }
-            }
-            if(i == numRows){
-                i = i-2;
-                while(i >0 && len!=length){
-                    array[i] += s.charAt(len);
-                    i--;
-                    len++;
-                }
-            }
-        }
-        String ans = "";
-        for (String a : array){
-            ans+=a;
-        }
-        return ans;
-
-    }
 
     public static int minimumMoves(int[][] grid) {
         int ans = 0;
@@ -402,5 +334,92 @@ public class prc {
             return true;
         }
         return false;
+    }
+    public static List<List<Integer>> threeSum(int[] nums) {
+
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(nums);
+        for (int i = 0; nums[i] <= 0 && i<nums.length-2; i++) {
+            if(i>0 && nums[i] == nums[i-1]){
+                continue;
+            }
+            int j,k;
+            j=i+1;
+            k=nums.length-1;
+            List<Integer> array;
+            while(j<k){
+                if(j>i+1 && nums[j] == nums[j-1]){
+                    j++;
+                    continue;
+                }
+                if(k<nums.length-1 && nums[k] == nums[k+1]){
+                    k--;
+                    continue;
+                }
+                array = new ArrayList<>();
+                if(nums[i]+nums[j]+nums[k]==0){
+                    array.add(nums[i]);
+                    array.add(nums[j]);
+                    array.add(nums[k]);
+                    j++;
+                    k--;
+                    if(array.size()>0){
+                        ans.add(array);
+                    }
+                } else if (nums[i] + nums[k] + nums[j] < 0) {
+                    j++;
+
+                }
+                else{
+                    k--;
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length-3; i++) {
+            if(i>0 && nums[i] == nums[i-1]){
+                continue;
+            }
+            for (int j = i+1; j < nums.length-2; j++) {
+                if(j>i+1 && nums[j]==nums[j-1]){
+                    continue;
+                }
+                int k,l;
+                k=j+1;
+                l=nums.length-1;
+                while(k<l){
+                    if(k>j+1 && nums[k]==nums[k-1]){
+                        k++;
+                        continue;
+                    }
+                    if(l<nums.length-1 && nums[l]==nums[l+1]){
+                        l--;
+                        continue;
+                    }
+                    List<Integer> array = new ArrayList<>();
+                    long num = (long)nums[i]+nums[j]+nums[k]+nums[l];
+                    if(num==target){
+                        array.add(nums[i]);
+                        array.add(nums[j]);
+                        array.add(nums[k]);
+                        array.add(nums[l]);
+                        ans.add(array);
+                        k++;
+                        l--;
+                    } else if (num < target) {
+                        k++;
+                    }
+                    else{
+                        l--;
+                    }
+                }
+            }
+        }
+        return ans;
     }
 }

@@ -1,8 +1,16 @@
 package practice;
 
-import java.lang.reflect.Array;
-import java.math.BigInteger;
 import java.util.*;
+class T{
+    public int i;
+    public int j;
+    public int sum; // nums1[i] + nums2[j]
+    public T(int i, int j, int sum) {
+        this.i = i;
+        this.j = j;
+        this.sum = sum;
+    }
+}
 class ListNode{
     int val;
     ListNode next;
@@ -14,6 +22,7 @@ class ListNode{
         this.val = val;
         this.next = next;
     }
+
 
 }
 class TreeNode {
@@ -769,21 +778,6 @@ public class fake {
         }
         return true ? stack.isEmpty() : false;
     }
-    public static int[] twoSum(int[] nums, int target) {
-        int[] ans = new int[2];
-        HashMap<Integer,Integer> hash = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            hash.put(nums[i],i);
-        }
-        for (int i = 0; i < nums.length-1; i++) {
-            if(hash.containsKey(target-nums[i]) && hash.get(target-nums[i]) != i){
-                ans[0] = i;
-                ans[1] = hash.get(target-nums[i]);
-                return ans;
-            }
-        }
-        return ans;
-    }
 
     public static int minSteps(String str) {
         int ans = 0;
@@ -838,24 +832,6 @@ public class fake {
             }
         }
         return true ? stack.isEmpty() : false;
-    }
-    public static int lengthOfLongestSubstring(String s) {
-        int ans = 0;
-        int i = 0;
-        while(i<s.length()){
-            HashMap<Character,Integer> hash = new HashMap<>();
-            while(i<s.length() && !hash.containsKey(s.charAt(i))){
-                hash.put(s.charAt(i),i);
-                i++;
-            }
-            if(hash.size()>ans){
-                ans = hash.size();
-            }
-            if(i<s.length()-1) {
-                i = (hash.get(s.charAt(i)) + 1);
-            }
-        }
-        return ans;
     }
 
 }
