@@ -5,7 +5,7 @@ import java.util.*;
 
 public class pract {
     public static void main(String[] args) {
-
+        int[] nums = {1,2,3};
     }
     public static void display(ListNode node){
         while(node!=null){
@@ -95,40 +95,7 @@ public class pract {
         }
     }
 
-    public static void nextPermutation(int[] nums) {
-        int flag = -1;
-        for (int i = nums.length-1; i >0 ; i--) {
-            if(nums[i]>nums[i-1]){
-                flag = i-1;
-                break;
-            }
-        }
-        if(flag == -1){
-            Arrays.sort(nums);
-            return;
-        }
-        int num = nums[flag];
-        int ind = -1;
-        int larg = Integer.MAX_VALUE;
-        for (int i = flag+1; i <nums.length ; i++) {
-            if(nums[i]>num && nums[i]<larg){
-                larg = nums[i];
-                ind = i;
-            }
-        }
-        nums[flag] = nums[ind]+nums[flag];
-        nums[ind] = nums[flag]-nums[ind];
-        nums[flag] = nums[flag]-nums[ind];
-        for (int i = flag+2; i <nums.length ; i++) {
-            int hel = nums[i];
-            int j = i-1;
-            while(j>=flag+1 && hel<nums[j]){
-                nums[j+1] = nums[j];
-                j--;
-            }
-            nums[j+1] = hel;
-        }
-    }
+
 
     public static int divide(int dividend, int divisor) {
         if(dividend==0){
@@ -618,5 +585,47 @@ public class pract {
         }
         return false;
     }
-
+    public static List<List<Integer>> levelOrder(TreeNode root) {
+        if(root == null){
+            return new ArrayList<>();
+        }
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.add(root);
+        List<List<Integer>> l1 = new ArrayList<>();
+        levelOrder(queue,new ArrayDeque<>(),l1);
+        return l1;
+    }
+    public static void levelOrder(Queue<TreeNode> q1,Queue<TreeNode> q2,List<List<Integer>> l1) {
+        if(q1.isEmpty()){
+            return;
+        }
+        List<Integer> l = new ArrayList<>();
+        while(!q1.isEmpty()){
+            TreeNode r = q1.remove();
+            l.add(r.val);
+            if(r.left!=null){
+                q2.add(r.left);
+            }
+            if(r.right!=null){
+                q2.add(r.right);
+            }
+        }
+        l1.add(l);
+        levelOrder(q2,q1,l1);
+    }
+    public static List<Integer> rightSideView(TreeNode root) {
+        List<Integer> l = new ArrayList<>();
+        rightside(root,l,0);
+        return l;
+    }
+    public static void rightside(TreeNode root,List<Integer> arr,int level){
+        if(root == null){
+            return;
+        }
+        if(arr.size() < level){
+            arr.add(root.val);
+        }
+        rightside(root.right,arr,level+1);
+        rightside(root.left,arr,level+1);
+    }
 }

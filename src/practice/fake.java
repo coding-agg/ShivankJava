@@ -1,5 +1,7 @@
 package practice;
 
+import com.sun.source.tree.Tree;
+
 import java.util.*;
 class T{
     public int i;
@@ -9,6 +11,14 @@ class T{
         this.i = i;
         this.j = j;
         this.sum = sum;
+    }
+}
+class sparse{
+    public int i;
+    public int j;
+    public sparse(int i,int j){
+        this.i = i;
+        this.j = j;
     }
 }
 class ListNode{
@@ -39,7 +49,8 @@ class TreeNode {
  }
 
 
-public class fake {
+
+public class fake{
     public static void main(String[] args) {
         String s = "bxj##tw";
         String t = "bxo#j##tw";
