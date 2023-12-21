@@ -1,10 +1,10 @@
 package practice;
-
 import java.util.*;
 
 public class done_leetcode {
+    static Scanner scn = new Scanner(System.in);
     public static void main(String[] args) {
-
+        int[] difficulty = {7,1,7,1,7,1};
     }
     public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int len1 = nums1.length;
@@ -585,4 +585,582 @@ public class done_leetcode {
             return root.right;
         }
     }
+    public static int numSpecial(int[][] mat) {
+        ArrayList<sparse> ans = new ArrayList<>();
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                if(mat[i][j]==1){
+                    sparse num = new sparse(i,j);
+                    ans.add(num);
+                }
+            }
+        }
+        int ansf = 0;
+        int i = 0;
+        while(i!=ans.size()){
+            sparse num = ans.get(i);
+            if(check(ans,num.i,num.j)){
+                ans.remove(num);
+                ansf++;
+                continue;
+            }
+            i++;
+        }
+        return ansf;
+    }
+    public static boolean check(ArrayList<sparse> array,int i,int j){
+        for (sparse num : array){
+            if(num.i == i && num.j!=j){
+                return false;
+            }
+            if(num.i !=i && num.j == j){
+                return false;
+            }
+        }
+        return true;
+    }
+    public static int[] rearrangeArray(int[] nums) {
+        int posIdx = 0;
+        int negIdx = 1;
+        int[] result = new int[nums.length];
+        for (int num : nums) {
+            if (num > 0) {
+                result[posIdx] = num;
+                posIdx += 2;
+            } else {
+                result[negIdx] = num;
+                negIdx += 2;
+            }
+        }
+        return result;
+    }
+
+    public static int[][] onesMinusZeros(int[][] grid) {
+        int len = grid.length;
+        int length = grid[0].length;
+        int l = len+length;
+        int[] row = new int[len];
+        for (int i = 0; i < len; i++) {
+            rowone(row, i, length, grid);
+        }
+        int[] col = new int[length];
+        for (int i = 0; i < length; i++) {
+            colone(col, i, len, grid);
+        }
+        int[][] diff = new int[len][length];
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < length; j++) {
+                diff[i][j] = 2 * (row[i] + col[j]) - l;
+            }
+        }
+        return diff;
+    }
+
+    public static void rowone(int[] row, int i, int length, int[][] grid) {
+        int count = 0;
+        for (int j = 0; j < length; j++) {
+            if (grid[i][j] == 1) {
+                count++;
+            }
+        }
+        row[i] = count;
+    }
+
+    public static void colone(int[] col, int j, int len, int[][] grid) {
+        int count = 0;
+        for (int i = 0; i < len; i++) {
+            if (grid[i][j] == 1) {
+                count++;
+            }
+        }
+        col[j] = count;
+    }
+    public static String defangIPaddr(String address) {
+        StringBuilder add = new StringBuilder(address);
+        int i =0;
+        int j = 0;
+        while(i<add.length()){
+            int size = add.length();
+            if(address.charAt(j) == '.'){
+                add.insert(i,'[');
+                add.insert(i+2,']');
+                i = i+3;
+                j++;
+                continue;
+            }
+            i++;
+            j++;
+        }
+        return add.toString();
+    }
+    public static String destCity(List<List<String>> paths) {
+        HashMap<String,String> hash = new HashMap<>();
+        for (List<String> path : paths){
+            hash.put(path.get(0),path.get(1));
+        }
+        String s = paths.get(0).get(1);
+        while(hash.containsKey(s)){
+            s = hash.get(s);
+        }
+        return s;
+    }
+    public static int numSplits(String s) {
+        int len = s.length();
+        Set<Character> set = new HashSet<>();
+        int[] arrleft = new int[len];
+        int[] arrright = new int[len];
+        char[] str = s.toCharArray();
+        for (int i = 0; i <len ; i++) {
+            set.add(str[i]);
+            arrleft[i] = set.size();
+        }
+        if(arrleft[len-1] %2 !=0){
+            return 0;
+        }
+        set = new HashSet<>();
+        for (int i = len-1; i >=0 ; i--) {
+            set.add(str[i]);
+            arrright[i] = set.size();
+        }
+        int ans = 0;
+        for (int i = 0; i < len-1; i++) {
+            if(arrleft[i] == arrright[i+1]){
+                ans++;
+            }
+            if(arrleft[i] > arrright[i]){
+                break;
+            }
+        }
+        return ans;
+    }
+    public static boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        int[] set = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            set[s.charAt(i) - 'a']++;
+            set[t.charAt(i) - 'a']--;
+        }
+        for (int n : set) {
+            if (n != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public static List<String> fizzBuzz(int n) {
+        List<String> l = new ArrayList<>();
+        for (int i = 1; i <=n ; i++) {
+            if(i%3 == 0 && i%5 == 0){
+                l.add("FizzBuzz");
+            } else if (i % 3 == 0) {
+                l.add("Fizz");
+            }else if(i%5 == 0){
+                l.add("Buzz");
+            }else{
+                l.add(i+"");
+            }
+        }
+        return l;
+    }
+    public List<Integer> findAnagrams(String s, String p) {
+        int lens = s.length();
+        int lenp = p.length();
+        if(lenp>lens){
+            return new ArrayList<>();
+        }
+        List<Integer> l = new ArrayList<>();
+        HashMap<Character,Integer> hash = new HashMap<>();
+        for (char pp : p.toCharArray()){
+            if(hash.containsKey(pp)){
+                hash.put(pp,hash.get(pp)+1);
+                continue;
+            }
+            hash.put(pp,1);
+        }
+        for (int i = 0; i <lenp ; i++) {
+            char h = s.charAt(i);
+            if(hash.containsKey(h)){
+                if(hash.get(h)>1){
+                    hash.put(h,hash.get(h)-1);
+                }else{
+                    hash.remove(h);
+                }
+            }
+        }
+        for (int i = 1; i <lens-lenp+1 ; i++) {
+
+        }
+        return l;
+    }
+    public static int maxProductDifference(int[] nums) {
+        int len = nums.length;
+        Arrays.sort(nums);
+        return (nums[len-1]*nums[len-2])-(nums[0]*nums[1]);
+    }
+    public static int reductionOperations(int[] nums) {
+        int len = nums.length;
+        Arrays.sort(nums);
+        int num = nums[0];
+        int ans = 0;
+        int f = 0;
+        for (int i = 0; i < len; i++) {
+            if(num == nums[i]){
+                continue;
+            }
+            if(nums[i] != nums[i-1]){
+                f+=1;
+            }
+            ans+=f;
+        }
+        return ans;
+    }
+    public static boolean areOccurrencesEqual(String s) {
+        int[] ch = new int[26];
+        for (char i : s.toCharArray()){
+            ch[i-'a']++;
+        }
+        int n = 0;
+        for (int num : ch){
+            if(num == 0){
+                continue;
+            }
+            if(num!=0 && n == 0){
+                n = num;
+            }
+            if(num!=n){
+                return false;
+            }
+        }
+        return true;
+    }
+    public static int[] missingRolls(int[] rolls, int mean, int n) {
+        int m = rolls.length;
+        int sum = 0;
+        for (int num : rolls){
+            sum+=num;
+        }
+        int number = (mean*(m+n))-sum;
+        if(number<0 || number<n || number>n*6){
+            return new int[0];
+        }
+        int carry = number%n;
+        number /=n;
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            ans[i] = number+carry;
+            carry = 0;
+            if(ans[i]>6){
+                carry = ans[i]-6;
+                ans[i] = 6;
+            }
+        }
+        return ans;
+    }
+    public static int[][] imageSmoother(int[][] img) {
+        int m = img.length;
+        int n = img[0].length;
+        int[][] ans = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                ans[i][j] = return_ans(img,i,j,m,n);
+            }
+        }
+        return ans;
+    }
+    public static int return_ans(int[][] img,int i,int j,int m,int n){
+        int count = 0;
+        int sum = 0;
+        for (int k = i-1; k <= i+1; k++) {
+            for (int l = j-1; l <= j+1; l++) {
+                if(k<0 || l<0 || k>=m || l>=n){
+                    continue;
+                }
+                sum+=img[k][l];
+                count++;
+            }
+        }
+        return sum/count;
+    }
+    public static int buyChoco(int[] prices, int money) {
+        int len = prices.length;
+        int small = Integer.MAX_VALUE;
+        int small2 = Integer.MAX_VALUE;
+        int index = -1;
+        for (int i = 0; i <len ; i++) {
+            int p = prices[i];
+            if(small>p){
+                small = p;
+                index = i;
+            }
+        }
+        for (int i = 0; i < len; i++) {
+            if(i == index){
+                continue;
+            }
+            int p = prices[i];
+            if(small2>p){
+                small2 = p;
+            }
+        }
+        return money-small-small2 >=0 ? money-small-small2 : money;
+    }
+    public static void nextPermutation(int[] nums) {
+        int flag = -1;
+        for (int i = nums.length-1; i >0 ; i--) {
+            if(nums[i]>nums[i-1]){
+                flag = i-1;
+                break;
+            }
+        }
+        if(flag == -1){
+            Arrays.sort(nums);
+            return;
+        }
+        int num = nums[flag];
+        int ind = -1;
+        int larg = Integer.MAX_VALUE;
+        for (int i = flag+1; i <nums.length ; i++) {
+            if(nums[i]>num && nums[i]<larg){
+                larg = nums[i];
+                ind = i;
+            }
+        }
+        nums[flag] = nums[ind]+nums[flag];
+        nums[ind] = nums[flag]-nums[ind];
+        nums[flag] = nums[flag]-nums[ind];
+        for (int i = flag+2; i <nums.length ; i++) {
+            int hel = nums[i];
+            int j = i-1;
+            while(j>=flag+1 && hel<nums[j]){
+                nums[j+1] = nums[j];
+                j--;
+            }
+            nums[j+1] = hel;
+        }
+    }
+    public static List<List<Integer>> permute(int[] nums) {
+        int len = nums.length;
+        int l = 1;
+        for (int i = 1; i <= len; i++) {
+            l*=i;
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> l1 = new ArrayList<>();
+        for (int i = 0; i < len; i++) {
+            l1.add(nums[i]);
+        }
+        ans.add(l1);
+        for (int i = 0; i <l-1 ; i++) {
+            nextPermutation(nums);
+            List<Integer> l2 = new ArrayList<>();
+            for (int j = 0; j < len; j++) {
+                l2.add(nums[j]);
+            }
+            ans.add(l2);
+        }
+        return ans;
+    }
+    public static int maxWidthOfVerticalArea(int[][] points) {
+        int len = points.length;
+        HashMap<Integer,Integer> hash = new HashMap<>();
+        for (int i = 0; i <len ; i++) {
+            hash.put(points[i][0],1);
+        }
+        int num = hash.size();
+        Set<Integer> set = new HashSet<>(hash.keySet());
+        int j = 0;
+        int ans = 0;
+        int old = 0;
+        for(int i : set){
+            if(j == 0){
+                old = i;
+                j++;
+                continue;
+            }
+            if(i-old>ans){
+                ans = i-old;
+            }
+            old = i;
+        }
+        return ans;
+    }
+    public static int maxScore(String s) {
+        int len = s.length();
+        int[] zero = new int[len];
+        int[] one = new int[len];
+        char[] arr = s.toCharArray();
+        int num = 0;
+        for (int i = 0; i < len; i++) {
+            if(arr[i] == '0'){
+                num++;
+                zero[i] = num;
+            }
+        }
+        num = 0;
+        for (int i = len-1; i >=0 ; i--) {
+            if(arr[i] == '1'){
+                num++;
+                one[i] = num;
+            }
+        }
+        int max = 0;
+        for (int i = 0; i < len-1; i++) {
+            max = Math.max(zero[i]+one[i+1],max);
+        }
+        return max;
+    }
+    public static boolean isSubPath(ListNode head, TreeNode root) {
+        if(root == null){
+            return false;
+        }
+        return iscontinuous(head,root)||isSubPath(head,root.left)||isSubPath(head,root.right);
+    }
+    public static boolean iscontinuous(ListNode head,TreeNode root){
+        if(head == null){
+            return true;
+        }
+        if(root == null){
+            return false;
+        }
+        return (head.val == root.val)&&(iscontinuous(head.next,root.left)||iscontinuous(head.next,root.right));
+    }
+    public static void solveSudoku(char[][] board) {
+        helper(board,0,0);
+    }
+    public static boolean helper(char[][] board,int row,int col){
+        if(row == board.length){
+            return true;
+        }
+        int nrow;
+        int ncol;
+        if(col != board.length-1){
+            nrow = row;
+            ncol = col+1;
+        }else{
+            nrow = row+1;
+            ncol = 0;
+        }
+        if(board[row][col]!='.'){
+            if(helper(board,nrow,ncol)){
+                return true;
+            }
+        }else{
+            for (int i = 1; i <=9 ; i++) {
+                if(isSafe(board,row,col,i)){
+                    board[row][col] = (char)(i+'0');
+                    if(helper(board,nrow,ncol)){
+                        return true;
+                    }else{
+                        board[row][col] = '.';
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    public static boolean isSafe(char[][] board,int row,int col,int number){
+        for (int i = 0; i < board.length; i++) {
+            if(board[i][col] == (char)(number+'0')){
+                return false;
+            }
+        }
+        for (int i = 0; i < board[0].length; i++) {
+            if(board[row][i] == (char)(number+'0')){
+                return false;
+            }
+        }
+        int sr = (row/3)*3;
+        int sc = (col/3)*3;
+        for (int i = sr; i <sr+3 ; i++) {
+            for (int j = sc; j <sc+3 ; j++) {
+                if(board[i][j] == (char)(number+'0')){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public static int maximum69Number (int num) {
+        String s = Integer.toString(num);
+        char[] arr = s.toCharArray();
+        for (int i = 0; i < arr.length; i++) {
+            if(arr[i] == '6'){
+                arr[i] = '9';
+                break;
+            }
+        }
+        int ans = 0;
+        for (int i = arr.length-1; i >=0; i--) {
+            ans+=(int)(arr[i]-'0')*(int)Math.pow(10,arr.length-i-1);
+        }
+        return ans;
+    }
+    public static boolean isPathCrossing(String path) {
+        HashMap<Integer,Set<Integer>> hash = new HashMap<>();
+        int i = 0;
+        int j = 0;
+        Set<Integer> set1 = new HashSet<>();
+        set1.add(j);
+        hash.put(i,set1);
+        for (char h : path.toCharArray()){
+            if(h == 'N'){
+                j++;
+            } else if (h == 'S') {
+                j--;
+            } else if (h == 'E') {
+                i++;
+            } else if (h == 'W') {
+                i--;
+            }
+            if(!hash.containsKey(i)){
+                Set<Integer> set = new HashSet<>();
+                set.add(j);
+                hash.put(i,set);
+            }
+            else{
+                if(hash.get(i).contains(j)){
+                    return true;
+                }else{
+                    hash.get(i).add(j);
+                }
+            }
+        }
+        return false;
+    }
+    public static int minOperations(String s) {
+        int len = s.length();
+        char[] ch = s.toCharArray();
+        int num1 = 0;
+        int num2 = 0;
+        for (int i = 0; i <len ; i++) {
+            if(i%2 == 0){
+                if(ch[i] == '0'){
+                    num2++;
+                }else{
+                    num1++;
+                }
+            }else{
+                if(ch[i] == '1'){
+                    num2++;
+                }else{
+                    num1++;
+                }
+            }
+        }
+        return Math.min(num1,num2);
+    }
+//    public static int numDecodings(String s) {
+//
+//    }
+//    public static int numRollsToTarget(int n, int k, int target) {
+//
+//    }
+//    public static long numRollsToTargetfun(int n,int k,int target){
+//
+//    }
+//    public int minDifficulty(int[] jobDifficulty, int d) {
+//
+//    }
 }

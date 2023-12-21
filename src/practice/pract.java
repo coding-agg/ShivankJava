@@ -4,15 +4,72 @@ import com.sun.source.tree.Tree;
 import java.util.*;
 
 public class pract {
-    public static void main(String[] args) {
+    public static void main(String[] args)throws java.lang.Exception {
+        Scanner scn = new Scanner(System.in);
+        int test = scn.nextInt();
 
-    }
-    public static void display(ListNode node){
-        while(node!=null){
-            System.out.println(node.val);
-            node = node.next;
+        while (test-- > 0) {
+            int num = scn.nextInt();
+            String s = scn.next();
+            char[] str = s.toCharArray();
+            StringBuilder ans = new StringBuilder();
+            int target = num / 2 + 1;
+
+            for (int i = 0; i < num; i++) {
+                if (i <= num - target - 1) {
+                    ans.append('P');
+                    target -= check(str[i], 'P');
+                } else {
+                    ans.append(win(str[i]));
+                }
+            }
+
+            System.out.println(ans.toString());
         }
     }
+
+    public static int check(char s, char t) {
+        return (s == 'R' && t == 'P') || (s == 'P' && t == 'S') || (s == 'S' && t == 'R') ? 1 : 0;
+    }
+
+    public static char win(char s) {
+        return (s == 'R') ? 'P' : (s == 'P') ? 'S' : 'R';
+    }
+    public static boolean istrue(int[] arr,int num){
+        if(num == 4){
+            if(arr[0]+arr[1] != arr[2]+arr[3]){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        if(arr[0]+arr[1]!=arr[num-2]+arr[num-1]){
+            return true;
+        }
+        for (int i = 2; i <num-2 ; i++) {
+            if(checkit(arr,num,arr[i])){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean checkit(int[] arr,int num,int val){
+        if(arr[0]!=val){
+            return true;
+        }
+        if(arr[1]!=val){
+            return true;
+        }
+        if(arr[num-2]!=val){
+            return true;
+        }
+        if(arr[num-1]!=val){
+            return true;
+        }
+        return false;
+    }
+
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode l3 = new ListNode();
         ListNode ans = l3;
@@ -95,40 +152,7 @@ public class pract {
         }
     }
 
-    public static void nextPermutation(int[] nums) {
-        int flag = -1;
-        for (int i = nums.length-1; i >0 ; i--) {
-            if(nums[i]>nums[i-1]){
-                flag = i-1;
-                break;
-            }
-        }
-        if(flag == -1){
-            Arrays.sort(nums);
-            return;
-        }
-        int num = nums[flag];
-        int ind = -1;
-        int larg = Integer.MAX_VALUE;
-        for (int i = flag+1; i <nums.length ; i++) {
-            if(nums[i]>num && nums[i]<larg){
-                larg = nums[i];
-                ind = i;
-            }
-        }
-        nums[flag] = nums[ind]+nums[flag];
-        nums[ind] = nums[flag]-nums[ind];
-        nums[flag] = nums[flag]-nums[ind];
-        for (int i = flag+2; i <nums.length ; i++) {
-            int hel = nums[i];
-            int j = i-1;
-            while(j>=flag+1 && hel<nums[j]){
-                nums[j+1] = nums[j];
-                j--;
-            }
-            nums[j+1] = hel;
-        }
-    }
+
 
     public static int divide(int dividend, int divisor) {
         if(dividend==0){
@@ -618,5 +642,47 @@ public class pract {
         }
         return false;
     }
-
+    public static List<List<Integer>> levelOrder(TreeNode root) {
+        if(root == null){
+            return new ArrayList<>();
+        }
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.add(root);
+        List<List<Integer>> l1 = new ArrayList<>();
+        levelOrder(queue,new ArrayDeque<>(),l1);
+        return l1;
+    }
+    public static void levelOrder(Queue<TreeNode> q1,Queue<TreeNode> q2,List<List<Integer>> l1) {
+        if(q1.isEmpty()){
+            return;
+        }
+        List<Integer> l = new ArrayList<>();
+        while(!q1.isEmpty()){
+            TreeNode r = q1.remove();
+            l.add(r.val);
+            if(r.left!=null){
+                q2.add(r.left);
+            }
+            if(r.right!=null){
+                q2.add(r.right);
+            }
+        }
+        l1.add(l);
+        levelOrder(q2,q1,l1);
+    }
+    public static List<Integer> rightSideView(TreeNode root) {
+        List<Integer> l = new ArrayList<>();
+        rightside(root,l,0);
+        return l;
+    }
+    public static void rightside(TreeNode root,List<Integer> arr,int level){
+        if(root == null){
+            return;
+        }
+        if(arr.size() < level){
+            arr.add(root.val);
+        }
+        rightside(root.right,arr,level+1);
+        rightside(root.left,arr,level+1);
+    }
 }
