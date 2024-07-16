@@ -8,8 +8,8 @@ public class sorting_techniques {
     public static void main(String[] args) {
         int[] arr = {1,5,4,3,7,8,9};
         quick(arr);
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i]+" ");
+        for (int num : arr){
+            System.out.println(num+" ");
         }
     }
 

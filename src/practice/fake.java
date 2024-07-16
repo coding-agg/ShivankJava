@@ -3,6 +3,17 @@ package practice;
 import com.sun.source.tree.Tree;
 
 import java.util.*;
+class Node
+{
+    int data;
+    Node left, right;
+
+    Node(int item)
+    {
+        data = item;
+        left = right = null;
+    }
+}
 class T{
     public int i;
     public int j;
@@ -31,6 +42,15 @@ class ListNode{
     ListNode(int val , ListNode next){
         this.val = val;
         this.next = next;
+    }
+    public ListNode arrayToList(int[] arr){
+        ListNode head = new ListNode(arr[0]);
+        ListNode current = head;
+        for(int i = 1; i < arr.length; i++){
+            current.next = new ListNode(arr[i]);
+            current = current.next;
+        }
+        return head;
     }
 }
 class TreeNode {

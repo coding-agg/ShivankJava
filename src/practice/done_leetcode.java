@@ -2,9 +2,799 @@ package practice;
 import java.util.*;
 
 public class done_leetcode {
-    static Scanner scn = new Scanner(System.in);
     public static void main(String[] args) {
-        int[] difficulty = {7,1,7,1,7,1};
+
+        Scanner scn = new Scanner(System.in);
+        int t = scn.nextInt();
+        while(t-- >0){
+            int X = scn.nextInt();
+            int largestPowerOfTwo = Integer.highestOneBit(X);
+            int smallerPieces = X - largestPowerOfTwo;
+            System.out.println(smallerPieces);
+        }
+    }
+    public static ListNode mergeNodes(ListNode head) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode dum = dummyHead;
+        head = head.next;
+        while(head!=null){
+            int num = 0;
+            while(head.val!=0){
+                num+= head.val;
+                head=head.next;
+            }
+            ListNode n = new ListNode(num);
+            dummyHead.next = n;
+            dummyHead = dummyHead.next;
+            head = head.next;
+        }
+        return dum.next;
+    }
+    public static int numWaterBottles(int numBottles, int numExchange) {
+        int ans = 0;
+        int empbottle = 0;
+        while(numBottles>0){
+            ans+=numBottles;
+            int temp = numBottles;
+            numBottles = (numBottles+empbottle)/numExchange;
+            empbottle = (temp+empbottle)%numExchange;
+        }
+        return ans;
+    }
+    public static int passThePillow(int n, int time) {
+        if(time<n){
+            return time+1;
+        }
+        if(n == 2){
+            return time%2==0 ? 1:2;
+        }
+        time = time+1;
+        int row = 1;
+        int abc = time-n;
+        int col = abc%(n-1);
+        row += abc/(n-1);
+        if(col>0){
+            row++;
+        }
+        if(row%2==0){
+            if(col==0){
+                return 1;
+            }
+            return n-col;
+        }
+        else{
+            if(col==0){
+                return n;
+            }
+            return col+1;
+        }
+    }
+    public static int[] nodesBetweenCriticalPoints(ListNode head) {
+        int num = 1;
+        int dis = -1;
+        int pr = -1;
+        int first = -1;
+        int last = -1;
+        ListNode prev = head;
+        ListNode after = head.next.next;
+        if(after==null){
+            return new int[]{-1,-1};
+        }
+        head = head.next;
+        while(after!=null){
+            int num1 = prev.val;
+            int num2 = after.val;
+            if((head.val>num1 && head.val>num2) || (head.val<num1 && head.val<num2)){
+                if(first!=-1){
+                    last = num;
+                }
+                else{
+                    first = num;
+                }
+                if(dis!=-1){
+                    dis = Math.min(last-pr,dis);
+                    pr = last;
+                }else{
+                    if(pr == -1){
+                        pr = first;
+                    }
+                    else{
+                        dis = last-first;
+                        pr = last;
+                    }
+                }
+            }
+            prev = head;
+            head = after;
+            after = after.next;
+            num++;
+        }
+        if(dis==-1){
+            return new int[]{-1,-1};
+        }else{
+            return new int[]{dis,last-first};
+        }
+    }
+    public static ListNode removeNodes(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        head.next = removeNodes(head.next);
+        return head.next != null && head.val<head.next.val ? head.next : head;
+    }
+    public static List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        sub(nums,0,ans,new ArrayList<>());
+        return ans;
+    }
+    public static void sub(int[] nums,int ind,List<List<Integer>> subsets,List<Integer> subs){
+        if(ind == nums.length){
+            subsets.add(subs);
+            return;
+        }
+        sub(nums,ind+1,subsets,subs);
+        List<Integer> abc = new ArrayList<>(subs);
+        abc.add(nums[ind]);
+        sub(nums,ind+1,subsets,abc);
+    }
+
+    public static int scoreOfString(String s) {
+        int ans = 0;
+        for (int i = 0; i < s.length()-1; i++) {
+            ans += Math.abs(s.charAt(i)-s.charAt(i+1));
+        }
+        return ans;
+    }
+
+    public static ListNode doubleIt(ListNode head){
+        if(head == null){
+            return null;
+        }
+        head = doublesIt(head);
+        if(head.val > 9){
+            ListNode head1 = new ListNode(head.val/10);
+            head.val = head.val%10;
+            head1.next = head;
+            head = head1;
+        }
+        return head;
+    }
+    public boolean evaluateTree(TreeNode root) {
+        //0 - false 1-true
+        //2 - OR 3-AND
+        if(root.val == 0){
+            return false;
+        }
+        if(root.val == 1){
+            return true;
+        }
+        if(root.val == 2){
+            return evaluateTree(root.left) | evaluateTree(root.right);
+        }else{
+            return evaluateTree(root.left) & evaluateTree(root.right);
+        }
+    }
+
+    public static ListNode doublesIt(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        head.next = doublesIt(head.next);
+        head.val = head.val*2;
+        if(head.next == null){
+            return head;
+        }
+        if(head.next.val>9){
+            head.val = head.val + head.next.val/10;
+            head.next.val = head.next.val%10;
+        }
+        return head;
+    }
+    public static int numRescueBoats(int[] people, int limit) {
+        int len = people.length;
+        Arrays.sort(people);
+        int left = 0;
+        int right = len-1;
+        int ans = 0;
+        while(right>=left){
+            if(people[right]+people[left]>limit){
+                right--;
+            }else{
+                right--;
+                left++;
+            }
+            ans++;
+        }
+        return ans;
+    }
+
+    public static int findPeakElement(int[] nums) {
+        Arrays.sort(nums);
+        System.out.println(nums[0]);
+        return 0;
+    }
+    public static int sumOfLeftLeaves(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        return sumof(root,false);
+    }
+    public static int sumNumbers(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        return numberfin(root,0);
+    }
+    public static int numberfin(TreeNode root,int sum){
+        if(root.left == null && root.right == null){
+            return sum*10+root.val;
+        }
+        if(root == null){
+            return sum;
+        }
+        int left = numberfin(root.left,(sum*10)+root.val);
+        int right = numberfin(root.right,(sum*10)+root.val);
+        return left+right;
+    }
+    public static int sumof(TreeNode root,boolean left){
+        if(root == null){
+            return 0;
+        }
+        if(root.left == null && root.right == null){
+            if(left){
+                return root.val;
+            }
+            return 0;
+        }
+        int root1 = sumof(root.left,true);
+        int root2 = sumof(root.right,false);
+        return root1+root2;
+    }
+    public static long countSubarrays(int[] nums, int k) {
+        int max = 0;
+        int len = nums.length;
+        for(int num : nums){
+            if(num>max){
+                max = num;
+            }
+        }
+        int l = 0;
+        int r = 0;
+        int count = 0;
+        long ans = 0;
+        for (; r<len ; r++) {
+            if(nums[r] == max){
+                count++;
+            }
+            while(count == k){
+                if(nums[l++] == max){
+                    count--;
+                }
+            }
+            ans +=l;
+        }
+        return ans;
+    }
+    public static String minRemoveToMakeValid(String s) {
+        StringBuilder str = new StringBuilder(s);
+        Stack<Integer> stk = new Stack<>();
+        for (int i = 0; i < str.length(); i++) {
+            if(str.charAt(i) == '('){
+                stk.add(i);
+            }
+            if(str.charAt(i) == ')'){
+                if(stk.isEmpty()){
+                    str.deleteCharAt(i);
+                    i--;
+                    continue;
+                }
+                stk.pop();
+            }
+        }
+        while(!stk.isEmpty()){
+            str.deleteCharAt(stk.pop());
+        }
+        return str.toString();
+    }
+    public static int timeRequiredToBuy(int[] tickets, int k) {
+        int len = tickets.length;
+        int sum = 0;
+        for (int i = 0; i <len ; i++) {
+            if(i<k){
+                if(tickets[i]<=tickets[k]){
+                    sum += tickets[i];
+                }
+                else{
+                    sum+=tickets[k];
+                }
+            }
+            else if(i == k){
+                sum+=tickets[i];
+            }
+            else{
+                if(tickets[i]>=tickets[k]){
+                    sum+=tickets[k]-1;
+                }
+                else{
+                    sum+=tickets[i];
+                }
+
+            }
+        }
+        return sum;
+    }
+    public static ListNode mergeInBetween(ListNode list1, int a, int b, ListNode list2) {
+        ListNode head = list1;
+        ListNode abc = null;
+        if(a == 0){
+            head = list2;
+            abc = list1;
+
+        }
+        else{
+            for (int i = 1; i <= a; i++) {
+                if(i == a){
+                    abc = list1.next;
+                    list1.next = list2;
+                    break;
+                }
+                list1 = list1.next;
+            }
+        }
+        for (int i = 1; i <=b-a ; i++) {
+            abc = abc.next;
+        }
+        while(list2.next!=null){
+            list2 = list2.next;
+        }
+        list2.next = abc.next;
+        return head;
+    }
+    public static List<Integer> findDuplicates(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        for(int num : nums){
+            nums[Math.abs(num)-1] *= -1;
+            if(nums[Math.abs(num)-1]>0){
+                list.add(num);
+            }
+        }
+        return list;
+    }
+    public int minOperations(int[] nums, int k) {
+        int ans = 0;
+        for (int i : nums){
+            if(i<k){
+                ans++;
+            }
+        }
+        return ans;
+    }
+    public static int maxSubarrayLength(int[] nums, int k) {
+        int len = nums.length;
+        if(len == 1){
+            return 1;
+        }
+        HashMap<Integer,Integer> hash = new HashMap<>();
+        int left = 0;
+        int right = 1;
+        int ans = 0;
+        hash.put(nums[0],1);
+        while(right<len){
+            if(hash.containsKey(nums[right]) && hash.get(nums[right])==k){
+                while(left<right){
+                    hash.put(nums[left],hash.get(nums[left])-1);
+                    if(nums[left] == nums[right]){
+                        left++;
+                        break;
+                    }
+                    left++;
+                }
+            }
+            if(hash.containsKey(nums[right])){
+                hash.put(nums[right],hash.get(nums[right])+1);
+            }else{
+                hash.put(nums[right],1);
+            }
+            if(right-left+1>ans){
+                ans = right-left+1;
+            }
+            right++;
+        }
+        return ans;
+    }
+    public static int firstMissingPositive(int[] nums) {
+        int len = nums.length;
+        int num = 0;
+        for (int i = 0; i <len ; i++) {
+            if(nums[i] == 1){
+                num = 1;
+            }
+            if(nums[i]<=0){
+                nums[i] = 1;
+            }
+        }
+        if(num == 0){
+            return 1;
+        }
+        for (int i = 0; i < len; i++) {
+            num = Math.abs(nums[i]);
+            if(num>len || num == 0){
+                continue;
+            }
+            nums[num-1] = -1*Math.abs(nums[num-1]);
+        }
+        for (int i = 0; i < len; i++) {
+            if(nums[i] >0){
+                return i+1;
+            }
+        }
+        return len+1;
+    }
+    public static ListNode reverseList(ListNode head) {
+        Stack<ListNode> stk = new Stack<>();
+        while(head != null){
+            stk.add(head);
+            head = head.next;
+        }
+        if(stk.isEmpty()){
+            return null;
+        }
+        ListNode head2 = stk.peek();
+        ListNode num = stk.pop();
+        while(!stk.isEmpty()){
+            num.next = stk.pop();
+            num = num.next;
+        }
+        num.next = null;
+        return head2;
+    }
+
+    public static int countPrimes(int n) {
+        boolean[] arr = new boolean[n];
+        arr[0] = true;
+        arr[1] = true;
+        int ans = 0;
+        for (int i = 2; i <n ; i++) {
+            if(!arr[i]) {
+                for (int j = i*2; j<n; j = j+i) {
+                    arr[j] = true;
+                }
+            }
+        }
+        for (int i = 2; i <n ; i++) {
+            if(arr[i]){
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+    public static boolean searchMatrix(int[][] matrix, int target) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        for (int i = 0; i <row ; i++) {
+            for (int j = 0; j < col; j++) {
+                if(matrix[i][j] == target){
+                    return true;
+                }
+                if(matrix[i][j]>target){
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+    public String customSortString(String order, String s) {
+        int len = s.length();
+        int[] arr = new int[26];
+        for (int i = 0; i <len ; i++) {
+            arr[s.charAt(i)-'a']++;
+        }
+        String ans = "";
+        int len2 = order.length();
+        for (int i = 0; i < len2; i++) {
+            char a = order.charAt(i);
+            while(arr[a-'a']!=0){
+                ans += a;
+                arr[a-'a']--;
+            }
+        }
+        for (int i = 0; i < 26; i++) {
+            while(arr[i]!=0){
+                ans += (char)(i+'a');
+                arr[i]--;
+            }
+        }
+        return ans;
+    }
+    public static int pivotInteger(int n) {
+        int sum = (n*(n+1))/2;
+        for (int i = n; i >=1; i--) {
+            int num1 = (i*(i+1))/2;
+            int num2 = sum-num1+i;
+            if(num1 == num2){
+                return i;
+            }
+        }
+        return -1;
+    }
+    public static boolean canSplitArray(List<Integer> nums, int m) {
+        int len = nums.size();
+        int[] count = new int[len];
+        int sum = 0;
+        for (int i = 0; i < len; i++) {
+            sum+=nums.get(i);
+            count[i] = sum;
+        }
+        int left = 0;
+        int right = len-1;
+        int point = 0;
+        while(left<right){
+            int dig1 = count[right-1]-point;
+            int dig2 = count[right]-count[left];
+            if(dig1>=m || dig2>=m || right-left == 1){
+                if(dig1>=dig2){
+                    right--;
+                    point = count[left-1];
+                }else{
+                    left++;
+                }
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+    public int[] intersection(int[] nums1, int[] nums2) {
+        HashSet<Integer> hash = new HashSet<>();
+        for (int i:nums1){
+            hash.add(i);
+        }
+        ArrayList<Integer> arr = new ArrayList<>();
+        for(int i:nums2){
+            if(hash.contains(i)){
+                hash.remove(i);
+                arr.add(i);
+            }
+        }
+        int[] abc = new int[arr.size()];
+        for(int i=0;i<abc.length;i++){
+            abc[i] = arr.get(i);
+        }
+        return abc;
+    }
+    public int getCommon(int[] nums1, int[] nums2) {
+        int len1 = nums1.length;
+        int len2 = nums2.length;
+        int one = 0;
+        int two = 0;
+        while(one<len1 && two<len2){
+            if(nums1[one] == nums2[two]){
+                return nums1[one];
+            }
+            if(nums1[one]>nums2[two]){
+                two++;
+            }else{
+                one++;
+            }
+        }
+        return -1;
+    }
+    public static int minOper(String str) {
+        Map<Character, List<Integer>> charPositions = new HashMap<>();
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            charPositions.computeIfAbsent(ch, k -> new ArrayList<>()).add(i);
+        }
+
+        int minOps = Integer.MAX_VALUE;
+        for (List<Integer> posList : charPositions.values()) {
+            int size = posList.size();
+            for (int i = 1; i < size; i++) {
+                minOps = Math.min(minOps, posList.get(i) - posList.get(i - 1));
+            }
+        }
+
+        return minOps == Integer.MAX_VALUE ? 0 : minOps;
+    }
+    public static int minimumLength(String s) {
+        int left = 0;
+        int right = s.length()-1;
+        char l = s.charAt(left);
+        char r = s.charAt(right);
+        while(l == r && left<right){
+            left++;right--;
+            while(s.charAt(left) == l && left<=right){
+                left++;
+            }
+            while(s.charAt(right) == r && left<=right){
+                right--;
+            }
+            l = s.charAt(left);
+            r = s.charAt(right);
+        }
+        return (left>right) ? 0 : right-left+1;
+    }
+    public static int func(int n,int[] arr){
+        Arrays.sort(arr);
+        int ans = arr[n-1];
+        for (int i = n-1; i >=0 ; i--) {
+                int min = arr[i];
+                if(min*(n-i)>ans){
+                    ans = min*(n-1);
+                }
+        }
+        return ans;
+    }
+
+    public static int bagOfTokensScore(int[] tokens, int power) {
+        Arrays.sort(tokens);
+        int ans = 0;
+        int left = 0;
+        int right = tokens.length-1;
+        int num = 0;
+        while(left<=right){
+            if(power>=tokens[left]){
+                power -= tokens[left];
+                num++;
+                left++;
+            }
+            else{
+                if(num>0) {
+                    power += tokens[right];
+                    num--;
+                    right--;
+                }else{
+                    return ans;
+                }
+            }
+            if(num>ans){
+                ans = num;
+            }
+        }
+        return ans;
+    }
+    public static int[] sortedSquares(int[] nums) {
+        int len = nums.length;
+        int[] arr = new int[len];
+        int left = 0;
+        int right = len-1;
+        int ind = len-1;
+        while(left<=right){
+            int num1 = Math.abs(nums[left]);
+            int num2 = Math.abs(nums[right]);
+            if(num1>num2){
+                arr[ind] = num1*num1;
+                left++;
+            }else{
+                arr[ind] = num2*num2;
+                right--;
+            }
+            ind--;
+        }
+        return arr;
+    }
+    public static ListNode removeNthFromEnd(ListNode head, int n) {
+        if(head.next == null){
+            return null;
+        }
+        ListNode l1 = head;
+        ListNode l2 = head;
+        for (int i = 0; i < n; i++) {
+            l1 = l1.next;
+        }
+        if(l1 == null){
+            return head.next;
+        }
+        while(l1.next != null){
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        l2.next = l2.next.next;
+        return head;
+    }
+    public static String maximumOddBinaryNumber(String s) {
+        int len = s.length();
+        int count = 0;
+        for (int i = 0; i <len ; i++) {
+            if(s.charAt(i) == '1'){
+                count++;
+            }
+        }
+        len = len-count;
+        String str = "";
+        while(count!=1){
+            str+='1';
+            count--;
+        }
+        while(len!=0){
+            str+='0';
+            len--;
+        }
+        return str+'1';
+    }
+    public static boolean isValidBST(TreeNode root) {
+        isvalidBST(root);
+        int num = arr.size();
+        if(arr.size() == 1){
+            return true;
+        }
+        int val = arr.get(0);
+        for (int i = 1; i <num-1 ; i++) {
+            if(val>=arr.get(i)){
+                return false;
+            }
+            val = arr.get(i);
+        }
+        return true;
+    }
+    public static ArrayList<Integer> arr = new ArrayList<>();
+    public static void isvalidBST(TreeNode root){
+        if(root == null){
+            return;
+        }
+        isvalidBST(root.left);
+        arr.add(root.val);
+        isvalidBST(root.right);
+    }
+
+
+    public static String countAndSay(int n) {
+        if(n == 1){
+            return "1";
+        }
+        String str = countAndSay(n-1);
+        String string = "";
+        char s = 'a';
+        int num = 0;
+        for (int i = 0; i <str.length() ; i++) {
+            if(s == str.charAt(i)){
+                num++;
+            }
+            else{
+                if(i!=0) {
+                    string += num + "" + s;
+                }
+                num = 1;
+                s = str.charAt(i);
+            }
+        }
+        string += num+""+s;
+        return string;
+    }
+    public static int furthestBuilding(int[] heights, int bricks, int ladders) {
+        int len = heights.length;
+        int num = 0;
+        PriorityQueue<Integer> queue = new PriorityQueue<>(Collections.reverseOrder());
+        int i = 1;
+        while(i<len && num<=bricks){
+            int k = heights[i]-heights[i-1];
+            if(k>0){
+                num+=k;
+                queue.add(k);
+            }
+            if(num>bricks && ladders>0){
+                num-=queue.remove();
+                ladders--;
+            }
+            if(num>bricks){
+                break;
+            }
+            i++;
+        }
+        return --i;
+    }
+    public static int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
+        if(startRow>=m || startRow<0 || startColumn>=n || startColumn<0){
+            return 1;
+        }
+        if(maxMove==0){
+            return 0;
+        }
+        return findPaths(m,n,maxMove-1,startRow+1,startColumn)
+                +findPaths(m,n,maxMove-1,startRow,startColumn+1)
+                +findPaths(m,n,maxMove-1,startRow-1,startColumn)
+                +findPaths(m,n,maxMove-1,startRow,startColumn-1);
     }
     public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int len1 = nums1.length;

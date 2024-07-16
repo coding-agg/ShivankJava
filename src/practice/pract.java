@@ -1,39 +1,225 @@
 package practice;
-import com.sun.source.tree.Tree;
 
+import java.lang.reflect.Array;
 import java.util.*;
+import java.sql.*;
 
-public class pract {
-    public static void main(String[] args)throws java.lang.Exception {
-        Scanner scn = new Scanner(System.in);
-        int test = scn.nextInt();
+public class pract{
+    public static void main(String[] args) throws java.lang.Exception{
+        int[] month = {31,29,31,30,31,30,31,31,30,31,30,31};
+        Random random = new Random();
+        int mon = 4;
+        int day = random.nextInt(month[mon]-1+1)+1;
+        System.out.println("Day is "+day);
+        System.out.println("Month is "+(mon+1));
 
-        while (test-- > 0) {
-            int num = scn.nextInt();
-            String s = scn.next();
-            char[] str = s.toCharArray();
-            StringBuilder ans = new StringBuilder();
-            int target = num / 2 + 1;
-
-            for (int i = 0; i < num; i++) {
-                if (i <= num - target - 1) {
-                    ans.append('P');
-                    target -= check(str[i], 'P');
-                } else {
-                    ans.append(win(str[i]));
+    }
+    public static int answer(int[] arr,int n){
+        int ans = n;
+        for (int i = 0; i < n; i++) {
+            int cur = arr[i];
+            for (int j = i; j < n; j++) {
+                cur |= arr[j];
+                if ((cur & (cur + 1)) == 0) {
+                    ans = Math.min(ans, n - (j - i + 1));
                 }
             }
+        }
+        return ans;
+    }
+    public static boolean isPrime(long number) {
+        if (number <= 1) return false;
+        for (long divisor = 2; divisor * divisor <= number; divisor++) {
+            if (number % divisor == 0) return false;
+        }
+        return true;
+    }
 
-            System.out.println(ans.toString());
+    // Function to find the product of the first two consecutive primes greater than or equal to n
+    public static long findProductOfTwoPrimes(long start) {
+        Long[] arr = new Long[2];
+        int num = 0;
+        while (num < 2) {
+            if (isPrime(start)) {
+                arr[num] = start;
+                num++;
+            }
+            start++;
+        }
+        return arr[0]*arr[1];
+    }
+
+    public static void abc(int n){
+        int[] arr = new int[n];
+        for (int i = 0; i <n; i++) {
+            if(i%2 == 0){
+                arr[i] = i+1;
+            }
+            else{
+                arr[i] = n-i+1;
+            }
+            System.out.print(arr[i]+" ");
+        }
+        return;
+    }
+    public static void answer(int n){
+
+        int[] arr;
+        if(n%2 == 0) {
+            abc(n);
+        }
+        else{
+            abc(n-1);
         }
     }
+    public static List<Integer> closestNumbers(List<Integer> arr) {
+        Collections.sort(arr);
+        HashMap<Integer, List<int[]>> map = new HashMap<>();
+        int num = Integer.MAX_VALUE;
+        for (int i = 0; i < arr.size()-1; i++) {
+            int[] array = new int[2];
+            array[0] = arr.get(i);
+            array[1] = arr.get(i+1);
+            if(array[1]-array[0] < num){
+                num = array[1]-array[0];
+            }
+            if(map.containsKey(array[1]-array[0])){
+                map.get(array[1]-array[0]).add(array);
+            }
+            else{
+                List<int[]> list = new ArrayList<>();
+                list.add(array);
+                map.put(array[1]-array[0],list);
+            }
+        }
+        List<Integer> list = new ArrayList<>();
+        List<int[]> list2 = map.get(num);
+        for(int[] array : list2){
+            list.add(array[0]);
+            list.add(array[1]);
+        }
+        return list;
+    }
+    public static List<Integer> matchingStrings(List<String> stringList, List<String> queries) {
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < queries.size(); i++) {
+            String str = queries.get(i);
+            int num = 0;
+            for (int j = 0; j < stringList.size(); j++) {
+                if(str.equals(stringList.get(j))){
+                    num++;
+                }
+            }
+            ans.add(num);
+        }
+        return ans;
 
-    public static int check(char s, char t) {
-        return (s == 'R' && t == 'P') || (s == 'P' && t == 'S') || (s == 'S' && t == 'R') ? 1 : 0;
+    }
+    public static int solve(int start, int end, int multiplier, int[] memo) {
+        if (multiplier == 1) return (end - start);
+        if (start >= end) return 0;
+
+        if (memo[start] != -1) return memo[start];
+
+        int option1 = 1 + solve(start + 1, end, multiplier, memo);
+        int option2 = 1 + solve(start * multiplier, end, multiplier, memo);
+
+        return memo[start] = Math.min(option1, option2);
+    }
+    public static long sum(long N){
+        long[] dp = new long[10];
+        for (int i = 1; i <= 9; ++i) {
+            dp[i] = dp[i - 1] + magic(i);
+        }
+
+        long sum = 0;
+        long cycle = N / 9;
+        long remainder = N % 9;
+        sum = cycle * dp[9];
+        if (remainder > 0) {
+            sum += dp[(int)remainder];
+        }
+
+        return sum;
+    }
+    public static long magic(long num){
+        long rem = 0;
+        long ans = 234;
+        while(ans>9) {
+            ans = 0;
+            while (num != 0) {
+                rem = num % 10;
+                ans += rem;
+                num = num / 10;
+            }
+            num = ans;
+        }
+        return ans;
+    }
+    public static int answer(int n,int m,int[] arrn,int[] arrm){
+        if(n<4 || m<4 || m+n<11){
+            return -1;
+        }
+        int sum = 0;
+        for (int i = n-1; i > n-5 ; i--) {
+            sum+=arrn[i];
+        }
+        for (int i = m-1; i > m-5 ; i--) {
+            sum+=arrm[i];
+        }
+        int num = 3;
+        int first = n-5;
+        int second = m-5;
+        while(first>=0 && second>=0 && num>0){
+            if(arrn[first]>=arrn[second]){
+                sum += arrn[first];
+                first--;
+                num--;
+            }
+            else{
+                sum += arrn[second];
+                second--;
+                num--;
+            }
+        }
+        if(num>0){
+            if(first < 0){
+                while(num>0){
+                    sum += arrn[first];
+                    first--;
+                    num--;
+                }
+            }
+            else{
+                while(num>0){
+                    sum += arrm[second];
+                    second--;
+                    num--;
+                }
+            }
+        }
+        return sum;
     }
 
-    public static char win(char s) {
-        return (s == 'R') ? 'P' : (s == 'P') ? 'S' : 'R';
+    public static long[] answer(int n,long l){
+        if(n<=l/2){
+            long[] arr = new long[n];
+            for (int i = 0; i < n; i++) {
+                arr[i] = i+1;
+            }
+            return arr;
+        }
+        long[] arr = new long[n];
+        boolean point = false;
+        arr[0] = l/2;
+        for (int i = 1; i < n; i++) {
+            arr[i] = arr[i-1]+1;
+            if(arr[i] == l){
+                arr[i] += 1;
+            }
+        }
+        return arr;
+
     }
     public static boolean istrue(int[] arr,int num){
         if(num == 4){
@@ -652,7 +838,7 @@ public class pract {
         levelOrder(queue,new ArrayDeque<>(),l1);
         return l1;
     }
-    public static void levelOrder(Queue<TreeNode> q1,Queue<TreeNode> q2,List<List<Integer>> l1) {
+    public static void levelOrder(Queue<TreeNode> q1, Queue<TreeNode> q2, List<List<Integer>> l1) {
         if(q1.isEmpty()){
             return;
         }
@@ -685,4 +871,10 @@ public class pract {
         rightside(root.right,arr,level+1);
         rightside(root.left,arr,level+1);
     }
+    public static int hel(int num,int hel){
+        num = 5;
+        System.out.println(hel);
+        return 67;
+    }
+
 }
