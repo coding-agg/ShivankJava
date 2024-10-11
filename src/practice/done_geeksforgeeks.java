@@ -4,7 +4,8 @@ import java.util.*;
 
 public class done_geeksforgeeks {
     public static void main(String[] args) {
-        System.out.println(reversedBits((long)5));
+        int[] arr = {8, 5, 10, 7, 9, 4, 15, 12, 90, 13};
+        ArrayList<Integer> list = new ArrayList<>();
     }
     public static Long reversedBits(Long x) {
         String num = Long.toBinaryString(x);

@@ -14,6 +14,14 @@ class Node
         left = right = null;
     }
 }
+class TrieNode{
+    TrieNode[] children;
+    int num;
+    TrieNode(){
+        children = new TrieNode[26];
+        num = 1;
+    }
+}
 class T{
     public int i;
     public int j;

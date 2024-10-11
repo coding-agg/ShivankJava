@@ -6,13 +6,115 @@ import java.sql.*;
 
 public class pract{
     public static void main(String[] args) throws java.lang.Exception{
-        int[] month = {31,29,31,30,31,30,31,31,30,31,30,31};
-        Random random = new Random();
-        int mon = 4;
-        int day = random.nextInt(month[mon]-1+1)+1;
-        System.out.println("Day is "+day);
-        System.out.println("Month is "+(mon+1));
-
+        Scanner scn = new Scanner(System.in);
+        int test = scn.nextInt();
+        while(test-->0){
+            int n = scn.nextInt();
+            int m = scn.nextInt();
+            int[][] matrix = new int[n][m];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    matrix[i][j] = 2;
+                }
+            }
+            int i = 0;
+            int j = 0;
+            boolean flag = false;
+            if(n>m){
+                while(i<n){
+                    if(j == m){
+                        j = j-2;
+                        flag = true;
+                    }
+                    else if(j<0){
+                        j = j+2;
+                        flag = false;
+                    }
+                    matrix[i][j] = 3;
+                    if(flag){
+                        j--;
+                    }else{
+                        j++;
+                    }
+                    i++;
+                }
+            }else{
+                while(j<m){
+                    if(i == n){
+                        i = i-2;
+                        flag = true;
+                    }
+                    else if(i<0){
+                        i = i+2;
+                        flag = false;
+                    }
+                    matrix[i][j] = 3;
+                    if(flag){
+                        i--;
+                    }else{
+                        i++;
+                    }
+                    j++;
+                }
+            }
+            for (int k = 0; k < n; k++) {
+                for (int l = 0; l < m; l++) {
+                    System.out.print(matrix[k][l]+" ");
+                }
+                System.out.println();
+            }
+        }
+    }
+    public static long function_A(int n, int[] arr){
+        HashMap<Integer,Integer> hm = new HashMap<>();
+        for(int i=0;i<n;i++){
+            if(arr[i] == 0){
+                continue;
+            }
+            if(hm.containsKey(arr[i])){
+                hm.put(arr[i],hm.get(arr[i])+1);
+                continue;
+            }
+            hm.put(arr[i],1);
+        }
+        if(hm.size()==0){
+            long pair = 0;
+            for (int i = 0; i < n; i++) {
+                for (int j = i+1; j <n ; j++) {
+                    if(arr[i] == arr[j]){
+                        pair++;
+                    }
+                }
+            }
+            return pair;
+        }
+        ArrayList<Integer> list1 = new ArrayList<>(hm.keySet());
+        ArrayList<Integer> list2 = new ArrayList<>(hm.values());
+        int a = 0;
+        int val = 0;
+        int ind = 0;
+        for (int i : list2){
+            if(i>val){
+                val=i;
+                ind = a;
+            }
+            a++;
+        }
+        int fin = list1.get(ind);
+        for (int i = 0; i < n; i++) {
+            if(arr[i] == 0){
+                arr[i] = fin;
+            }
+        }
+        long pair = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i+1; j <n ; j++) {
+                if(arr[i] == arr[j]){
+                    pair++;
+                }
+            }
+        }
+        return pair;
     }
     public static int answer(int[] arr,int n){
         int ans = n;
