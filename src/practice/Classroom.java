@@ -1,7 +1,5 @@
 package practice;
 
-import Section14_Interfaces_and_Generics.Pair;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;

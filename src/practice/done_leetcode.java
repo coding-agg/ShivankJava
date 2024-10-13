@@ -1,7 +1,5 @@
 package practice;
 
-import javafx.util.Pair;
-
 import java.util.*;
 
 import static practice.quicksort.*;
@@ -10,13 +8,60 @@ import static practice.quicksort.*;
 public class done_leetcode {
     public static void main(String[] args) {
         int[][] arr = {
-                {1,2,3,4},
-                {1,2},
-                {3,4},
-                {0,4},
-                {}
+                {2,1,1},
+                {1,1,0},
+                {0,1,1},
         };
-        System.out.println(eventualSafeNodes(arr));
+        System.out.println(orangesRotting(arr));
+    }
+    public static int[] smallestRange(List<List<Integer>> nums) {
+        PriorityQueue<int[]> queue = new PriorityQueue<>((a,b)->a[0]-b[0]);
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.size(); i++) {
+            int num = nums.get(i).get(0);
+            max = Math.max(max, num);
+            queue.add(new int[]{num, i,0});
+        }
+        int min = queue.peek()[0];
+        int size = max-min;
+        int high = max;
+        int low = min;
+        while(queue.size() == nums.size()){
+            int[] arr = queue.poll();
+            int index = arr[1];
+            int pos = arr[2];
+            if(pos == nums.get(index).size()-1){
+                return new int[]{min,max};
+            }
+            int[] sum = new int[3];
+            sum[0] = nums.get(index).get(pos+1);
+            sum[1] = index;
+            sum[2] = pos+1;
+            high = Math.max(high, sum[0]);
+            queue.add(sum);
+
+            low = queue.peek()[0];
+
+            if(high-low<max-min){
+                max = high;
+                min = low;
+            }
+        }
+        return new int[]{min,max};
+    }
+    public static int minGroups(int[][] intervals) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        pq.add(intervals[0][1]);
+        for (int i = 1; i < intervals.length; i++) {
+            if(pq.peek() < intervals[i][0]){
+                pq.poll();
+                pq.add(intervals[i][1]);
+                continue;
+            }
+            pq.add(intervals[i][1]);
+        }
+        return pq.size();
     }
     public static int smallestChair(int[][] times, int targetFriend) {
         int[][] nums = new int[times.length][3];
@@ -369,51 +414,59 @@ public class done_leetcode {
     }
 
     public static int orangesRotting(int[][] grid) {
-        Queue<Pair<Integer,Integer>> queue = new LinkedList<>();
-        int orange = 0;
-        for(int i = 0;i<grid.length;i++){
+        boolean[][] visited = new boolean[grid.length][grid[0].length];
+        Queue<int[]> queue1 = new LinkedList<>();
+        Queue<int[]> queue2 = new LinkedList<>();
+        for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 if(grid[i][j] == 2){
-                    queue.add(new Pair<>(i,j));
+                    queue1.add(new int[]{i,j});
                 }
+            }
+        }
+        int count = 0;
+        while (!queue1.isEmpty()) {
+            int[] arr = queue1.remove();
+            int i = arr[0];
+            int j = arr[1];
+            if(visited[i][j]){
+                continue;
+            }
+            visited[i][j] = true;
+            if(i-1>=0 && grid[i-1][j]==1){
+                grid[i-1][j] = 2;
+                queue2.add(new int[]{i-1,j});
+            }
+            if(j-1>=0 && grid[i][j-1]==1){
+                grid[i][j-1] = 2;
+                queue2.add(new int[]{i,j-1});
+            }
+            if(i+1<grid.length && grid[i+1][j]==1){
+                grid[i+1][j] = 2;
+                queue2.add(new int[]{i+1,j});
+            }
+            if(j+1<grid[0].length && grid[i][j+1]==1){
+                grid[i][j+1] = 2;
+                queue2.add(new int[]{i,j+1});
+            }
+            if(queue1.isEmpty()){
+                if(queue2.isEmpty()){
+                    break;
+                }else{
+                    queue1 = new LinkedList<>(queue2);
+                    queue2 = new LinkedList<>();
+                    count++;
+                }
+            }
+        }
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
                 if(grid[i][j] == 1){
-                    orange++;
+                    return -1;
                 }
             }
         }
-        int time = 0;
-        while(!queue.isEmpty()){
-            int size = queue.size();
-            for (int i = 0; i < size; i++) {
-                Pair<Integer,Integer> pr = queue.poll();
-                int a = pr.getKey();
-                int b = pr.getValue();
-                if(a-1>=0 && grid[a-1][b] == 1){
-                    grid[a-1][b] = 2;
-                    orange--;
-                    queue.add(new Pair<>(a-1,b));
-                }
-                if(a+1<grid.length && grid[a+1][b] == 1){
-                    grid[a+1][b] = 2;
-                    orange--;
-                    queue.add(new Pair<>(a+1,b));
-                }
-                if(b-1>=0 && grid[a][b-1] == 1){
-                    grid[a][b-1] = 2;
-                    orange--;
-                    queue.add(new Pair<>(a,b-1));
-                }
-                if(b+1<grid[0].length && grid[a][b+1] == 1){
-                    grid[a][b+1] = 2;
-                    orange--;
-                    queue.add(new Pair<>(a,b+1));
-                }
-            }
-            if(!queue.isEmpty()){
-                time++;
-            }
-        }
-        return orange == 0 ? time : -1;
+        return count;
     }
     public static long countCompleteDayPairs(int[] hours) {
         long ans = 0;
