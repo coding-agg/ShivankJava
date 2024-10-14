@@ -7,12 +7,21 @@ import static practice.quicksort.*;
 
 public class done_leetcode {
     public static void main(String[] args) {
-        int[][] arr = {
-                {2,1,1},
-                {1,1,0},
-                {0,1,1},
-        };
-        System.out.println(orangesRotting(arr));
+        int[] nums = {1,10,3,3,3};
+        System.out.println(maxKelements(nums,3));
+    }
+    public static long maxKelements(int[] nums, int k) {
+        PriorityQueue<Integer> queue = new PriorityQueue<>((a,b)->b-a);
+        for(int i : nums){
+            queue.add(i);
+        }
+        long ans = 0;
+        for (int i = 0; i < k; i++) {
+            int num = queue.poll();
+            ans += num;
+            queue.add((int)Math.ceil((double) num /3));
+        }
+        return ans;
     }
     public static int[] smallestRange(List<List<Integer>> nums) {
         PriorityQueue<int[]> queue = new PriorityQueue<>((a,b)->a[0]-b[0]);
