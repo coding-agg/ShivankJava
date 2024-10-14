@@ -7,8 +7,7 @@ import static practice.quicksort.*;
 
 public class done_leetcode {
     public static void main(String[] args) {
-        int[] nums = {1,10,3,3,3};
-        System.out.println(maxKelements(nums,3));
+        System.out.println("Hello");
     }
     public static long maxKelements(int[] nums, int k) {
         PriorityQueue<Integer> queue = new PriorityQueue<>((a,b)->b-a);
